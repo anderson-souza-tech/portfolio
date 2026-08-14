@@ -1,0 +1,23 @@
+# =========================================================
+# Override de DESENVOLVIMENTO — mesclado automaticamente pelo Docker Compose
+# junto com o docker-compose.yml principal (sem precisar de flag -f).
+#
+# Monta o código como volume (em vez de depender só do que foi copiado na
+# imagem) e ativa hot-reload, para editar no VSCode e ver a mudança sem
+# rebuildar. Não afeta o Kubernetes de forma alguma — os manifests em
+# k8s/manifests/ continuam usando as imagens buildadas normalmente.
+# =========================================================
+services:
+  frontend:
+    volumes:
+      # Nginx serve arquivos estáticos direto do disco a cada requisição —
+      # não tem "rebuild" nem "reload" a fazer, só salvar o arquivo e dar
+      # F5 no navegador.
+      - ./frontend/src:/usr/share/nginx/html:ro
+
+  backend:
+    volumes:
+      - ./backend/app:/app/app
+    # --reload faz o Uvicorn reiniciar sozinho quando detecta mudança em
+    # qualquer arquivo .py dentro de /app/app.
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
