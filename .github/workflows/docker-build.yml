@@ -1,0 +1,38 @@
+name: Build das imagens Docker
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build frontend
+        run: docker build -t portfolio-frontend:ci ./frontend
+
+      - name: Build backend
+        run: docker build -t portfolio-backend:ci ./backend
+
+      # TODO: adicionar step de push para um registry (Docker Hub, GHCR)
+      # quando decidir publicar de verdade. Exemplo com GitHub Container
+      # Registry (ghcr.io), usando o próprio GITHUB_TOKEN:
+      #
+      # - name: Login no GHCR
+      #   uses: docker/login-action@v3
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
+      #
+      # - name: Push das imagens
+      #   run: |
+      #     docker tag portfolio-frontend:ci ghcr.io/SEU_USUARIO/portfolio-frontend:latest
+      #     docker tag portfolio-backend:ci ghcr.io/SEU_USUARIO/portfolio-backend:latest
+      #     docker push ghcr.io/SEU_USUARIO/portfolio-frontend:latest
+      #     docker push ghcr.io/SEU_USUARIO/portfolio-backend:latest

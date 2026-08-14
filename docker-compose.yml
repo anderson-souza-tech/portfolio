@@ -1,0 +1,43 @@
+version: "3.8"
+
+# =========================================================
+# Portfólio pessoal — Anderson Souza
+# Uso local: docker compose up -d, depois http://localhost:8080
+# =========================================================
+
+services:
+  frontend:
+    build: ./frontend
+    container_name: portfolio-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    container_name: portfolio-backend
+    environment:
+      DB_HOST: db
+      DB_NAME: portfolio
+      DB_USER: portfolio_user
+      DB_PASSWORD: "TROCAR_ANTES_DE_SUBIR"
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    container_name: portfolio-db
+    environment:
+      POSTGRES_DB: portfolio
+      POSTGRES_USER: portfolio_user
+      POSTGRES_PASSWORD: "TROCAR_ANTES_DE_SUBIR"
+    volumes:
+      - portfolio_db_data:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+
+volumes:
+  portfolio_db_data:

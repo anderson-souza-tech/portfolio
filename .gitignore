@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node (caso adicione algo no futuro)
+node_modules/
+
+# Editores
+.vscode/
+.idea/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Segredos reais (nunca versionar credenciais reais)
+.env
+*.local.yaml

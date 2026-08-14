@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anderson Santos de Souza — Analista de Suporte</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="hero">
+    <div class="container">
+        <h1>Anderson Santos de Souza</h1>
+        <p class="subtitle">Analista de Suporte · Docker & Kubernetes · Cibersegurança</p>
+        <p class="hero-note">
+            Este site é, ele mesmo, o portfólio técnico: frontend + API + banco,
+            containerizados e orquestrados em Kubernetes.
+            <a href="#arquitetura">Ver como foi construído ↓</a>
+        </p>
+    </div>
+</header>
+
+<nav class="tabs">
+    <button class="tab-btn active" data-tab="sobre">Sobre</button>
+    <button class="tab-btn" data-tab="skills">Skills</button>
+    <button class="tab-btn" data-tab="projetos">Projetos</button>
+    <button class="tab-btn" data-tab="arquitetura">Arquitetura</button>
+    <button class="tab-btn" data-tab="guestbook">Guestbook</button>
+</nav>
+
+<main class="container">
+
+    <section id="sobre" class="tab-content active">
+        <h2>Sobre mim</h2>
+        <p>
+            <!-- TODO: ajustar com seu texto real -->
+            Analista de suporte com interesse em infraestrutura, administração de servidores
+            Linux/Windows, containerização com Docker e Kubernetes, monitoramento (Zabbix/Grafana) e resposta
+            a incidentes de segurança. Cursando certificações Docker (DCA) e Kubernetes,
+            e mantendo um homelab pessoal para testes e conteúdo sobre cibersegurança.
+        </p>
+        <p>
+            <!-- TODO: adicionar links reais -->
+            <a href="#" target="_blank">LinkedIn</a> ·
+            <a href="#" target="_blank">GitHub</a> ·
+            <a href="#" target="_blank">TikTok</a>
+        </p>
+    </section>
+
+    <section id="skills" class="tab-content">
+        <h2>Skills</h2>
+        <div id="skills-list" class="grid">Carregando...</div>
+    </section>
+
+    <section id="projetos" class="tab-content">
+        <h2>Projetos</h2>
+        <div id="projects-list" class="grid">Carregando...</div>
+    </section>
+
+    <section id="arquitetura" class="tab-content">
+        <h2>Como este site foi construído</h2>
+        <p>A resposta abaixo vem ao vivo do endpoint <code>/api/architecture</code> da própria API deste site.</p>
+        <div id="architecture-content">Carregando...</div>
+    </section>
+
+    <section id="guestbook" class="tab-content">
+        <h2>Guestbook</h2>
+        <form id="guestbook-form">
+            <input type="text" id="gb-nome" placeholder="Seu nome" required maxlength="80">
+            <textarea id="gb-mensagem" placeholder="Deixe uma mensagem" required maxlength="500" rows="3"></textarea>
+            <button type="submit">Enviar</button>
+        </form>
+        <div id="guestbook-list"></div>
+    </section>
+
+</main>
+
+<footer class="container">
+    <p>Construído com Docker, Kubernetes, FastAPI e PostgreSQL. Código no <a href="#" target="_blank">GitHub</a>.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
