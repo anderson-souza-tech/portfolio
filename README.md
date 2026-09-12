@@ -1,113 +1,49 @@
-<<<<<<< HEAD
-# Portfólio Pessoal — Anderson Santos de Souza
+# DevSystem Portfolio
 
-Site pessoal construído como demonstração técnica: não é só uma vitrine
-*sobre* Docker/Kubernetes, é *feito com* Docker e Kubernetes, de ponta a
-ponta. O próprio site tem uma aba "Arquitetura" que explica como ele
-funciona, alimentada por um endpoint da própria API (`/api/architecture`).
+Portfólio técnico de Anderson Souza, publicado em uma VPS Ubuntu com Docker, Nginx, Traefik, HTTPS automático e pipeline CI/CD pelo GitHub Actions.
 
-## Stack
+- Site: [devsystem.tech](https://devsystem.tech)
+- GitHub: [anderson-souza-tech/portfolio](https://github.com/anderson-souza-tech/portfolio)
+- Status: em produção
 
-- **Frontend**: HTML/CSS/JS estático, servido por Nginx (que também faz
-  proxy reverso para a API em `/api`)
-- **Backend**: Python 3.12 + FastAPI (documentação automática em `/docs`)
-- **Banco**: PostgreSQL 16
-- **Orquestração**: Docker Compose (local) e Kubernetes (produção)
-- **Registry**: [Docker Hub](https://hub.docker.com/u/docker4linux26) (`docker4linux26/portfolio-backend`, `docker4linux26/portfolio-frontend`)
-- **Repositório**: https://github.com/anderson-souza-tech/portfolio
+## Sobre o projeto
 
-## Estrutura
+O DevSystem é um portfólio estático desenvolvido com HTML, CSS e JavaScript. O conteúdo é servido pelo Nginx dentro de um container Docker.
 
-```
-portfolio/
-├── README.md
-├── docker-compose.yml
-├── frontend/
-│   ├── Dockerfile
-│   ├── nginx.conf
-│   └── src/ (index.html, style.css, script.js)
-├── backend/
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   └── app/ (main.py, database.py)
-├── db-init/
-│   └── 01-init.sql
-├── k8s/manifests/       (namespace, secret, db, backend + HPA, frontend, ingress)
-└── .github/workflows/   (CI de build das imagens)
-```
+Quando uma alteração é aprovada e enviada para a branch `main`, o GitHub Actions valida o projeto, publica a imagem no GitHub Container Registry e atualiza automaticamente o container na VPS.
 
-## Rodando localmente (Docker Compose)
-
-```bash
-docker compose up -d
-```
-
-Acesse **http://localhost:8080**. A documentação interativa da API fica em
-**http://localhost:8080/docs**.
-
-## Rodando em Kubernetes (Docker Desktop)
-
-Os manifests em `k8s/manifests/` já apontam para as imagens publicadas no
-Docker Hub (`docker4linux26/portfolio-backend:1.0` e
-`docker4linux26/portfolio-frontend:1.0`), com `imagePullPolicy: IfNotPresent`.
-
-```bash
-# 1. (Opcional) Build e push manual, sem depender do CI —
-#    normalmente isso é feito pelo GitHub Actions a cada push na main
-docker login
-docker build -t docker4linux26/portfolio-backend:1.0 ./backend
-docker build -t docker4linux26/portfolio-frontend:1.0 ./frontend
-docker push docker4linux26/portfolio-backend:1.0
-docker push docker4linux26/portfolio-frontend:1.0
-
-# 2. Aplicar os manifests
-kubectl apply -f k8s/manifests/
-
-# 3. Acompanhar os pods
-kubectl get pods -n portfolio -w
-```
-
-> Para testar mudanças locais sem publicar no registry a cada vez, buildar
-> as imagens localmente com a mesma tag (`docker build -t
-> docker4linux26/portfolio-backend:1.0 ./backend`) e trocar
-> `imagePullPolicy` para `Never` nos manifests — assim o Kubernetes usa a
-> imagem já existente no daemon local em vez de tentar puxar do Docker Hub.
-
-Para acessar via navegador, adicione `127.0.0.1 anderson.nsconsultoria.cloud` ao
-arquivo `hosts` do Windows e acesse `http://anderson.nsconsultoria.cloud` (ou
-teste via `curl -H "Host: anderson.nsconsultoria.cloud" http://localhost/`).
-
-## Recursos de Kubernetes usados (propositalmente, como demonstração)
-
-- **Namespace** dedicado
-- **Secret** para credenciais do banco
-- **PersistentVolumeClaim** para dados do PostgreSQL
-- **Deployments** com liveness/readiness probes em todos os serviços
-- **HorizontalPodAutoscaler** no backend (escala por uso de CPU — requer
-  `metrics-server` no cluster para funcionar de verdade)
-- **Ingress** com proxy interno para a API via Nginx
-
-## Publicando de verdade
-
-- [ ] Trocar as credenciais placeholder (`TROCAR_ANTES_DE_SUBIR`) por segredos reais
-- [x] Definir um registry de destino — Docker Hub (`docker4linux26`)
-- [ ] Configurar `DOCKERHUB_USERNAME` e `DOCKERHUB_TOKEN` nos Secrets do
-      repositório GitHub (Settings > Secrets and variables > Actions) para
-      o CI conseguir publicar as imagens automaticamente
-- [ ] Configurar TLS no Ingress (cert-manager ou certificado manual)
-- [ ] Preencher o conteúdo real (seção "Sobre", skills, projetos) — hoje
-      tem dados de exemplo no `db-init/01-init.sql`
-- [ ] Instalar `metrics-server` no cluster se quiser o HPA funcionando de fato
-- [x] Completar o workflow de CI com push para o registry escolhido
-=======
-# DevSystem — pacote de deploy
-
-Portfólio estático de Anderson Souza servido pelo Nginx em um container Docker.
-
-## Estrutura
+## Arquitetura atual
 
 ```text
-devsystem-container/
+Visitante
+   | HTTPS
+   v
+Traefik na VPS
+   | rede Docker proxy
+   v
+Container devsystem-portfolio
+   |
+   v
+Nginx -> HTML, CSS, JavaScript e imagens
+```
+
+| Camada | Tecnologia | Responsabilidade |
+|---|---|---|
+| Interface | HTML, CSS e JavaScript | Conteúdo, design, responsividade e animações |
+| Servidor web | Nginx | Arquivos estáticos, cache, headers e health check |
+| Empacotamento | Docker | Imagem reproduzível do site |
+| Registry | GitHub Container Registry | Armazenamento das imagens publicadas |
+| CI/CD | GitHub Actions | Validação, publicação e implantação |
+| Proxy reverso | Traefik | Domínio, roteamento e HTTPS |
+| Infraestrutura | VPS Ubuntu | Execução dos containers |
+
+## Estrutura do repositório
+
+```text
+portfolio/
+├── .github/workflows/pipeline.yml
+├── deploy/docker-compose.prod.yml
+├── nginx/default.conf
 ├── site/
 │   ├── assets/
 │   │   ├── anderson-souza.jpeg
@@ -115,195 +51,200 @@ devsystem-container/
 │   ├── app.js
 │   ├── index.html
 │   └── styles.css
-├── nginx/
-│   └── default.conf
-├── deploy/
-│   └── docker-compose.prod.yml
-├── .github/
-│   └── workflows/
-│       └── pipeline.yml
+├── backend/                 # arquitetura anterior/laboratório
+├── db-init/                 # arquitetura anterior/laboratório
+├── frontend/                # arquitetura anterior/laboratório
+├── k8s/                     # laboratório Kubernetes
 ├── .dockerignore
 ├── .env.example
-├── Dockerfile
+├── .gitignore
 ├── docker-compose.yml
 ├── docker-stack.yml
+├── Dockerfile
 └── README.md
 ```
 
-## Opção 1 — executar diretamente com Docker
+## Arquivos utilizados em produção
 
-Na raiz do projeto:
+| Arquivo | Finalidade |
+|---|---|
+| `site/index.html` | Estrutura, textos, links e seções da página |
+| `site/styles.css` | Cores, layout, responsividade e animações |
+| `site/app.js` | Menu móvel e exibição dos elementos durante a rolagem |
+| `site/assets/` | Fotografia e favicon |
+| `nginx/default.conf` | Configuração do Nginx, cache, segurança e `/health` |
+| `Dockerfile` | Construção da imagem do site |
+| `deploy/docker-compose.prod.yml` | Execução na VPS e integração com o Traefik |
+| `.github/workflows/pipeline.yml` | Pipeline de CI/CD |
+
+## Executar localmente com Docker
 
 ```bash
-docker build -t devsystem-portfolio:latest .
-docker run -d \
-  --name devsystem-portfolio \
-  --restart unless-stopped \
+docker build -t devsystem-portfolio:local .
+docker run --rm -d \
+  --name devsystem-portfolio-local \
   -p 8080:80 \
-  devsystem-portfolio:latest
+  devsystem-portfolio:local
 ```
 
-Acesse `http://IP-DO-SERVIDOR:8080`.
-
-Validar o container:
+Acesse `http://localhost:8080` e valide:
 
 ```bash
-docker ps
-docker logs devsystem-portfolio
 curl http://127.0.0.1:8080/health
+docker logs devsystem-portfolio-local
 ```
 
-## Opção 2 — Docker Compose
-
-Crie o arquivo de configuração local:
+Para encerrar:
 
 ```bash
-cp .env.example .env
+docker stop devsystem-portfolio-local
 ```
 
-Edite a porta em `.env`, se necessário, e execute:
+## Manutenção do conteúdo
+
+| Alteração | Arquivo principal |
+|---|---|
+| Textos, links ou seções | `site/index.html` |
+| Cores, fontes e espaçamento | `site/styles.css` |
+| Menu ou animações | `site/app.js` |
+| Foto ou favicon | `site/assets/` |
+| Cache, headers ou health check | `nginx/default.conf` |
+| Domínio e regras do Traefik | `deploy/docker-compose.prod.yml` |
+| Processo de CI/CD | `.github/workflows/pipeline.yml` |
+
+## Fluxo recomendado para alterações
+
+Atualize a branch principal e crie uma branch para a mudança:
 
 ```bash
-docker compose up -d --build
-docker compose ps
+git switch main
+git pull --ff-only origin main
+git switch -c feat/nome-da-alteracao
 ```
 
-Para atualizar o site depois de alterar os arquivos da pasta `site/`:
+Depois de editar e testar:
 
 ```bash
-docker compose up -d --build --force-recreate
-```
-
-Para remover o ambiente:
-
-```bash
-docker compose down
-```
-
-## Opção 3 — Docker Swarm com Traefik
-
-O arquivo `docker-stack.yml` considera que o Traefik já está implantado, possui o entrypoint `websecure`, utiliza o resolvedor de certificados `letsencrypt` e está conectado à rede overlay `traefik-public`.
-
-Crie a rede uma única vez, caso ainda não exista:
-
-```bash
-docker network create --driver overlay --attachable traefik-public
-```
-
-Publique a imagem em um registry acessível por todos os nós:
-
-```bash
-docker login
-docker build -t seu-usuario/devsystem-portfolio:latest .
-docker push seu-usuario/devsystem-portfolio:latest
-```
-
-Defina as variáveis e faça o deploy:
-
-```bash
-export IMAGE_NAME=seu-usuario/devsystem-portfolio:latest
-export DOMAIN=devsystem.seudominio.com.br
-docker stack deploy -c docker-stack.yml devsystem
-```
-
-Confira a implantação:
-
-```bash
-docker stack services devsystem
-docker stack ps devsystem --no-trunc
-docker service logs -f devsystem_devsystem
-```
-
-Atualização após publicar uma nova tag:
-
-```bash
-docker service update \
-  --image seu-usuario/devsystem-portfolio:NOVA-TAG \
-  --with-registry-auth \
-  devsystem_devsystem
-```
-
-Remover a stack:
-
-```bash
-docker stack rm devsystem
-```
-
-## Publicar no GitHub
-
-Depois de extrair o pacote na pasta do repositório:
-
-```bash
-git init
+git status
+git diff
 git add .
-git commit -m "Publica portfólio DevSystem"
-git branch -M main
-git remote add origin https://github.com/anderson-souza-tech/portfolio.git
-git push -u origin main
+git commit -m "feat: descreva a alteração"
+git push -u origin HEAD
 ```
 
-Se o repositório já estiver inicializado, não execute novamente `git init` nem `git remote add origin`; apenas adicione, confirme e envie as alterações.
+Abra um pull request para a branch `main`. Pull requests executam somente a validação. Após o merge, a pipeline publica a imagem e atualiza a VPS automaticamente.
 
-## Onde editar o conteúdo
+## Pipeline CI/CD
 
-- Texto e links: `site/index.html`
-- Estilos e responsividade: `site/styles.css`
-- Menu e animações: `site/app.js`
-- Foto e favicon: `site/assets/`
-- Configuração do Nginx: `nginx/default.conf`
+O workflow `.github/workflows/pipeline.yml` possui três jobs.
 
-## Pipeline GitHub Actions
+### Validar e testar container
 
-A pipeline em `.github/workflows/pipeline.yml` executa automaticamente:
+- confirma a existência dos arquivos essenciais;
+- constrói a imagem Docker;
+- inicia um container temporário;
+- testa o endpoint `/health`;
+- remove o container de teste.
 
-1. Validação dos arquivos essenciais.
-2. Build e teste de saúde do container.
-3. Publicação das tags `latest` e do commit no GitHub Container Registry.
-4. Conexão SSH com o servidor.
-5. Atualização do ambiente usando Docker Compose.
-6. Verificação do endpoint `/health` depois do deploy.
+### Publicar imagem no GHCR
 
-Pull requests executam somente a validação. Pushes na branch `main` publicam a imagem e fazem o deploy. A pipeline também pode ser iniciada manualmente em **Actions > DevSystem CI/CD > Run workflow**.
+- autentica no GitHub Container Registry;
+- publica as tags `latest` e o SHA do commit;
+- registra a origem e a revisão da imagem.
 
-### Secrets obrigatórios
+### Implantar no servidor
 
-Cadastre em **Settings > Secrets and variables > Actions > Secrets**:
+- configura o acesso SSH;
+- envia o Compose de produção para `/opt/devsystem`;
+- autentica a VPS no GHCR;
+- baixa a nova imagem;
+- atualiza o container;
+- verifica o endpoint `/health`.
+
+## Secrets e variáveis
+
+Configure em **Settings > Secrets and variables > Actions**:
 
 | Secret | Conteúdo |
 |---|---|
-| `DEPLOY_HOST` | IP ou nome DNS do servidor |
-| `DEPLOY_USER` | Usuário SSH com acesso ao Docker |
-| `DEPLOY_SSH_KEY` | Chave SSH privada completa |
-| `DEPLOY_KNOWN_HOSTS` | Chave pública de identificação do servidor SSH |
-| `GHCR_USERNAME` | Usuário do GitHub que acessará o pacote |
-| `GHCR_READ_TOKEN` | Personal Access Token com permissão `read:packages` |
+| `DEPLOY_HOST` | IP ou domínio da VPS |
+| `DEPLOY_USER` | Usuário SSH autorizado a executar Docker |
+| `DEPLOY_SSH_KEY` | Chave SSH privada exclusiva para deploy |
+| `DEPLOY_KNOWN_HOSTS` | Identidade pública do servidor SSH |
+| `GHCR_USERNAME` | Usuário autorizado a baixar a imagem |
+| `GHCR_READ_TOKEN` | Token com permissão `read:packages` |
 
-Para gerar o conteúdo de `DEPLOY_KNOWN_HOSTS`, execute em uma máquina confiável e confira a impressão digital antes de cadastrar:
-
-```bash
-ssh-keyscan -H IP-OU-DOMINIO-DO-SERVIDOR
-```
-
-### Variables opcionais
-
-Cadastre em **Settings > Secrets and variables > Actions > Variables** somente se desejar alterar os padrões:
-
-| Variable | Padrão | Finalidade |
+| Variable opcional | Padrão | Finalidade |
 |---|---:|---|
-| `DEPLOY_PORT` | `22` | Porta do SSH |
-| `DEPLOY_PATH` | `/opt/devsystem` | Diretório da aplicação no servidor |
-| `HTTP_PORT` | `8080` | Porta publicada pelo container |
+| `DEPLOY_PORT` | `22` | Porta SSH |
+| `DEPLOY_PATH` | `/opt/devsystem` | Diretório operacional na VPS |
+| `HTTP_PORT` | `8080` | Porta local usada no health check |
 
-### Preparação do servidor
+Nunca adicione chaves, tokens, senhas ou o conteúdo real dos secrets ao repositório.
 
-O servidor precisa ter Docker, o plugin Docker Compose e o usuário SSH deve conseguir executar `docker` sem interação. Exemplo para criar o diretório padrão:
+## Produção
+
+O arquivo `deploy/docker-compose.prod.yml`:
+
+- exige a variável `IMAGE_NAME`;
+- reinicia o container automaticamente;
+- publica a aplicação apenas em `127.0.0.1:8080` para diagnóstico local;
+- conecta o container à rede externa `proxy`;
+- configura o Traefik para `devsystem.tech` e `www.devsystem.tech`;
+- utiliza o resolvedor `letsencrypt`;
+- impede elevação de privilégios com `no-new-privileges`.
+
+Comandos úteis na VPS:
 
 ```bash
-sudo mkdir -p /opt/devsystem
-sudo chown -R SEU_USUARIO:SEU_USUARIO /opt/devsystem
-docker --version
-docker compose version
+cd /opt/devsystem
+docker compose ps
+docker compose logs --tail=100
+curl http://127.0.0.1:8080/health
+docker inspect devsystem-portfolio --format '{{json .State.Health}}'
 ```
 
-No repositório do GitHub, mantenha a permissão de workflow para publicar pacotes. A pipeline já declara `packages: write` e utiliza o `GITHUB_TOKEN` fornecido pelo próprio GitHub para enviar a imagem ao GHCR.
->>>>>>> d76ab46 (feat: adiciona portfolio DevSystem com Docker e pipeline)
+## Rollback
+
+Cada imagem também é identificada pelo SHA do commit. Para retornar a uma versão anterior:
+
+```bash
+cd /opt/devsystem
+export IMAGE_NAME="ghcr.io/anderson-souza-tech/devsystem-portfolio:SHA_ANTERIOR"
+export HTTP_PORT="8080"
+docker compose pull
+docker compose up -d --remove-orphans
+curl http://127.0.0.1:8080/health
+```
+
+Depois do rollback, corrija também a branch `main` para que um novo deploy não publique novamente a versão com problema.
+
+## Arquitetura anterior e laboratórios
+
+As pastas abaixo não participam do site atualmente publicado:
+
+- `backend/`: API FastAPI com endpoints de saúde, arquitetura, skills, projetos e guestbook;
+- `db-init/`: tabelas PostgreSQL e dados de demonstração;
+- `frontend/`: interface anterior que consumia a API;
+- `k8s/manifests/`: laboratório Kubernetes com Namespace, Secret, PostgreSQL, Backend, Frontend, HPA e Ingress;
+- `docker-stack.yml`: alternativa de implantação em Docker Swarm.
+
+Esses componentes foram mantidos como material de estudo. Antes de reutilizá-los em produção, é necessário revisar credenciais, domínio, imagens, TLS, segurança e observabilidade.
+
+## Tecnologias demonstradas
+
+- HTML5, CSS3 e JavaScript
+- Nginx
+- Docker e Docker Compose
+- Traefik e Let's Encrypt
+- GitHub Actions e GitHub Container Registry
+- Linux e SSH
+- Docker Swarm e Kubernetes em laboratório
+
+## Autor
+
+**Anderson Souza**
+
+- [LinkedIn](https://www.linkedin.com/in/andersouza-ti)
+- [GitHub](https://github.com/anderson-souza-tech)
+- [DevSystem](https://devsystem.tech)
