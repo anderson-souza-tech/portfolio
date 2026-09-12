@@ -4,20 +4,37 @@ services:
     container_name: devsystem-portfolio
     restart: unless-stopped
     pull_policy: always
+
     ports:
-      - "${HTTP_PORT:-8080}:80"
+      - "127.0.0.1:${HTTP_PORT:-8080}:80"
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.devsystem.rule=Host(`devsystem.tech`) || Host(`www.devsystem.tech`)"
+      - "traefik.http.routers.devsystem.entrypoints=websecure"
+      - "traefik.http.routers.devsystem.tls=true"
+      - "traefik.http.routers.devsystem.tls.certresolver=letsencrypt"
+      - "traefik.http.services.devsystem.loadbalancer.server.port=80"
+
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/health"]
       interval: 30s
       timeout: 3s
       retries: 3
       start_period: 5s
+
     security_opt:
       - no-new-privileges:true
+
     networks:
       - devsystem
+      - proxy
 
 networks:
   devsystem:
     name: devsystem-network
     driver: bridge
+
+  proxy:
+    external: true
