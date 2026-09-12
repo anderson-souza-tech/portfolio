@@ -1,0 +1,23 @@
+services:
+  devsystem:
+    image: ${IMAGE_NAME:?Informe a variável IMAGE_NAME}
+    container_name: devsystem-portfolio
+    restart: unless-stopped
+    pull_policy: always
+    ports:
+      - "${HTTP_PORT:-8080}:80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - devsystem
+
+networks:
+  devsystem:
+    name: devsystem-network
+    driver: bridge

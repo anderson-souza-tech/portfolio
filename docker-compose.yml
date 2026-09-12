@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 version: "3.8"
 
 # =========================================================
@@ -41,3 +42,30 @@ services:
 
 volumes:
   portfolio_db_data:
+=======
+services:
+  devsystem:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: devsystem-portfolio:latest
+    container_name: devsystem-portfolio
+    restart: unless-stopped
+    ports:
+      - "${HTTP_PORT:-8080}:80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - devsystem
+
+networks:
+  devsystem:
+    name: devsystem-network
+    driver: bridge
+>>>>>>> d76ab46 (feat: adiciona portfolio DevSystem com Docker e pipeline)

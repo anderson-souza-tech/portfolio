@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Portfólio Pessoal — Anderson Santos de Souza
 
 Site pessoal construído como demonstração técnica: não é só uma vitrine
@@ -98,3 +99,211 @@ teste via `curl -H "Host: anderson.nsconsultoria.cloud" http://localhost/`).
       tem dados de exemplo no `db-init/01-init.sql`
 - [ ] Instalar `metrics-server` no cluster se quiser o HPA funcionando de fato
 - [x] Completar o workflow de CI com push para o registry escolhido
+=======
+# DevSystem — pacote de deploy
+
+Portfólio estático de Anderson Souza servido pelo Nginx em um container Docker.
+
+## Estrutura
+
+```text
+devsystem-container/
+├── site/
+│   ├── assets/
+│   │   ├── anderson-souza.jpeg
+│   │   └── favicon.svg
+│   ├── app.js
+│   ├── index.html
+│   └── styles.css
+├── nginx/
+│   └── default.conf
+├── deploy/
+│   └── docker-compose.prod.yml
+├── .github/
+│   └── workflows/
+│       └── pipeline.yml
+├── .dockerignore
+├── .env.example
+├── Dockerfile
+├── docker-compose.yml
+├── docker-stack.yml
+└── README.md
+```
+
+## Opção 1 — executar diretamente com Docker
+
+Na raiz do projeto:
+
+```bash
+docker build -t devsystem-portfolio:latest .
+docker run -d \
+  --name devsystem-portfolio \
+  --restart unless-stopped \
+  -p 8080:80 \
+  devsystem-portfolio:latest
+```
+
+Acesse `http://IP-DO-SERVIDOR:8080`.
+
+Validar o container:
+
+```bash
+docker ps
+docker logs devsystem-portfolio
+curl http://127.0.0.1:8080/health
+```
+
+## Opção 2 — Docker Compose
+
+Crie o arquivo de configuração local:
+
+```bash
+cp .env.example .env
+```
+
+Edite a porta em `.env`, se necessário, e execute:
+
+```bash
+docker compose up -d --build
+docker compose ps
+```
+
+Para atualizar o site depois de alterar os arquivos da pasta `site/`:
+
+```bash
+docker compose up -d --build --force-recreate
+```
+
+Para remover o ambiente:
+
+```bash
+docker compose down
+```
+
+## Opção 3 — Docker Swarm com Traefik
+
+O arquivo `docker-stack.yml` considera que o Traefik já está implantado, possui o entrypoint `websecure`, utiliza o resolvedor de certificados `letsencrypt` e está conectado à rede overlay `traefik-public`.
+
+Crie a rede uma única vez, caso ainda não exista:
+
+```bash
+docker network create --driver overlay --attachable traefik-public
+```
+
+Publique a imagem em um registry acessível por todos os nós:
+
+```bash
+docker login
+docker build -t seu-usuario/devsystem-portfolio:latest .
+docker push seu-usuario/devsystem-portfolio:latest
+```
+
+Defina as variáveis e faça o deploy:
+
+```bash
+export IMAGE_NAME=seu-usuario/devsystem-portfolio:latest
+export DOMAIN=devsystem.seudominio.com.br
+docker stack deploy -c docker-stack.yml devsystem
+```
+
+Confira a implantação:
+
+```bash
+docker stack services devsystem
+docker stack ps devsystem --no-trunc
+docker service logs -f devsystem_devsystem
+```
+
+Atualização após publicar uma nova tag:
+
+```bash
+docker service update \
+  --image seu-usuario/devsystem-portfolio:NOVA-TAG \
+  --with-registry-auth \
+  devsystem_devsystem
+```
+
+Remover a stack:
+
+```bash
+docker stack rm devsystem
+```
+
+## Publicar no GitHub
+
+Depois de extrair o pacote na pasta do repositório:
+
+```bash
+git init
+git add .
+git commit -m "Publica portfólio DevSystem"
+git branch -M main
+git remote add origin https://github.com/anderson-souza-tech/portfolio.git
+git push -u origin main
+```
+
+Se o repositório já estiver inicializado, não execute novamente `git init` nem `git remote add origin`; apenas adicione, confirme e envie as alterações.
+
+## Onde editar o conteúdo
+
+- Texto e links: `site/index.html`
+- Estilos e responsividade: `site/styles.css`
+- Menu e animações: `site/app.js`
+- Foto e favicon: `site/assets/`
+- Configuração do Nginx: `nginx/default.conf`
+
+## Pipeline GitHub Actions
+
+A pipeline em `.github/workflows/pipeline.yml` executa automaticamente:
+
+1. Validação dos arquivos essenciais.
+2. Build e teste de saúde do container.
+3. Publicação das tags `latest` e do commit no GitHub Container Registry.
+4. Conexão SSH com o servidor.
+5. Atualização do ambiente usando Docker Compose.
+6. Verificação do endpoint `/health` depois do deploy.
+
+Pull requests executam somente a validação. Pushes na branch `main` publicam a imagem e fazem o deploy. A pipeline também pode ser iniciada manualmente em **Actions > DevSystem CI/CD > Run workflow**.
+
+### Secrets obrigatórios
+
+Cadastre em **Settings > Secrets and variables > Actions > Secrets**:
+
+| Secret | Conteúdo |
+|---|---|
+| `DEPLOY_HOST` | IP ou nome DNS do servidor |
+| `DEPLOY_USER` | Usuário SSH com acesso ao Docker |
+| `DEPLOY_SSH_KEY` | Chave SSH privada completa |
+| `DEPLOY_KNOWN_HOSTS` | Chave pública de identificação do servidor SSH |
+| `GHCR_USERNAME` | Usuário do GitHub que acessará o pacote |
+| `GHCR_READ_TOKEN` | Personal Access Token com permissão `read:packages` |
+
+Para gerar o conteúdo de `DEPLOY_KNOWN_HOSTS`, execute em uma máquina confiável e confira a impressão digital antes de cadastrar:
+
+```bash
+ssh-keyscan -H IP-OU-DOMINIO-DO-SERVIDOR
+```
+
+### Variables opcionais
+
+Cadastre em **Settings > Secrets and variables > Actions > Variables** somente se desejar alterar os padrões:
+
+| Variable | Padrão | Finalidade |
+|---|---:|---|
+| `DEPLOY_PORT` | `22` | Porta do SSH |
+| `DEPLOY_PATH` | `/opt/devsystem` | Diretório da aplicação no servidor |
+| `HTTP_PORT` | `8080` | Porta publicada pelo container |
+
+### Preparação do servidor
+
+O servidor precisa ter Docker, o plugin Docker Compose e o usuário SSH deve conseguir executar `docker` sem interação. Exemplo para criar o diretório padrão:
+
+```bash
+sudo mkdir -p /opt/devsystem
+sudo chown -R SEU_USUARIO:SEU_USUARIO /opt/devsystem
+docker --version
+docker compose version
+```
+
+No repositório do GitHub, mantenha a permissão de workflow para publicar pacotes. A pipeline já declara `packages: write` e utiliza o `GITHUB_TOKEN` fornecido pelo próprio GitHub para enviar a imagem ao GHCR.
+>>>>>>> d76ab46 (feat: adiciona portfolio DevSystem com Docker e pipeline)

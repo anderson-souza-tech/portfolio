@@ -1,0 +1,37 @@
+services:
+  devsystem:
+    image: ${IMAGE_NAME:-andersonsouza/devsystem-portfolio:latest}
+    networks:
+      - traefik-public
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik-public"
+        - "traefik.http.routers.devsystem.rule=Host(`${DOMAIN}`)"
+        - "traefik.http.routers.devsystem.entrypoints=websecure"
+        - "traefik.http.routers.devsystem.tls=true"
+        - "traefik.http.routers.devsystem.tls.certresolver=letsencrypt"
+        - "traefik.http.services.devsystem.loadbalancer.server.port=80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+networks:
+  traefik-public:
+    external: true

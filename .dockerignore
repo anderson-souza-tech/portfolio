@@ -1,0 +1,12 @@
+.git
+.gitignore
+.env
+*.log
+*.tar
+*.tar.gz
+*.zip
+README.md
+docker-stack.yml
+docker-compose.yml
+.github
+deploy
