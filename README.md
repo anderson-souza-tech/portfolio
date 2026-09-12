@@ -204,33 +204,6 @@ curl http://127.0.0.1:8080/health
 docker inspect devsystem-portfolio --format '{{json .State.Health}}'
 ```
 
-## Rollback
-
-Cada imagem também é identificada pelo SHA do commit. Para retornar a uma versão anterior:
-
-```bash
-cd /opt/devsystem
-export IMAGE_NAME="ghcr.io/anderson-souza-tech/devsystem-portfolio:SHA_ANTERIOR"
-export HTTP_PORT="8080"
-docker compose pull
-docker compose up -d --remove-orphans
-curl http://127.0.0.1:8080/health
-```
-
-Depois do rollback, corrija também a branch `main` para que um novo deploy não publique novamente a versão com problema.
-
-## Arquitetura anterior e laboratórios
-
-As pastas abaixo não participam do site atualmente publicado:
-
-- `backend/`: API FastAPI com endpoints de saúde, arquitetura, skills, projetos e guestbook;
-- `db-init/`: tabelas PostgreSQL e dados de demonstração;
-- `frontend/`: interface anterior que consumia a API;
-- `k8s/manifests/`: laboratório Kubernetes com Namespace, Secret, PostgreSQL, Backend, Frontend, HPA e Ingress;
-- `docker-stack.yml`: alternativa de implantação em Docker Swarm.
-
-Esses componentes foram mantidos como material de estudo. Antes de reutilizá-los em produção, é necessário revisar credenciais, domínio, imagens, TLS, segurança e observabilidade.
-
 ## Tecnologias demonstradas
 
 - HTML5, CSS3 e JavaScript
