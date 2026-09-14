@@ -77,6 +77,10 @@ portfolio/
 | `deploy/docker-compose.prod.yml` | Execução na VPS e integração com o Traefik |
 | `.github/workflows/pipeline.yml` | Pipeline de CI/CD |
 
+## Documentação operacional
+
+O guia completo de operação da VPS, Docker, Nginx, Traefik, SSL, rollback e diagnóstico está em [`docs/OPERACAO-VPS.md`](docs/OPERACAO-VPS.md).
+
 ## Executar localmente com Docker
 
 ```bash
