@@ -114,7 +114,7 @@ jobs:
       SSH_PORT: ${{ vars.DEPLOY_PORT || '22' }}
       DEPLOY_PATH: ${{ vars.DEPLOY_PATH || '/opt/devsystem' }}
       HTTP_PORT: ${{ vars.HTTP_PORT || '8080' }}
-      IMAGE_NAME: ${{ needs.publish.outputs.image }}:${{ github.sha }}
+      IMAGE_NAME: registry.devsystem.tech/devsystem/portfolio:${{ github.sha }}
     steps:
       - name: Baixar código
         uses: actions/checkout@v4
