@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="DevSystem — portfólio de Anderson Souza sobre suporte técnico, Docker, Kubernetes e Docker Swarm." />
+    <meta name="description" content="DevSystem — portfólio de Anderson Souza com projetos reais em Docker, CI/CD, Traefik, PHP, MariaDB, automação e infraestrutura." />
     <meta name="theme-color" content="#07111f" />
     <title>DevSystem | Anderson Souza</title>
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
@@ -39,7 +39,7 @@
             <a class="button button-ghost" href="https://github.com/anderson-souza-tech/portfolio" target="_blank" rel="noreferrer">GitHub</a>
           </div>
           <ul class="hero-tags" aria-label="Áreas de interesse">
-            <li>Docker</li><li>Kubernetes</li><li>Docker Swarm</li>
+            <li>Docker</li><li>CI/CD</li><li>Traefik</li><li>Automação</li>
           </ul>
         </div>
 
@@ -104,14 +104,48 @@
           <h2>Projetos em produção</h2>
           <p>Projetos desenvolvidos para transformar estudos de infraestrutura, containers e automação em soluções práticas.</p>
         </div>
-        <div class="project-board reveal">
-          <div class="terminal-bar"><span></span><span></span><span></span><small>devsystem / projetos</small></div>
-          <div class="project-empty">
-            <div class="prompt" aria-hidden="true"><span>$</span> status --projeto=devsystem-portfolio</div>
-            <h3>DevSystem Portfolio.</h3>
-            <p>Portfólio publicado em uma VPS Ubuntu com Docker, Nginx, Traefik, HTTPS automático, GitHub Container Registry e pipeline CI/CD pelo GitHub Actions.</p>
-            <a href="https://github.com/anderson-souza-tech/portfolio" target="_blank" rel="noreferrer">Ver código no GitHub <span aria-hidden="true">↗</span></a>
-          </div>
+        <div class="project-grid">
+          <article class="project-board reveal">
+            <div class="terminal-bar"><span></span><span></span><span></span><small>devsystem / portfolio</small></div>
+            <div class="project-empty">
+              <div class="prompt" aria-hidden="true"><span>$</span> status --projeto=devsystem-portfolio</div>
+              <div class="project-status"><span class="status-dot" aria-hidden="true"></span> EM PRODUÇÃO</div>
+              <h3>DevSystem Portfolio.</h3>
+              <p>Portfólio publicado em VPS Ubuntu com Docker, Nginx, Traefik, HTTPS automático, GitHub Container Registry e pipeline CI/CD pelo GitHub Actions.</p>
+              <ul class="project-stack" aria-label="Tecnologias do DevSystem Portfolio">
+                <li>HTML/CSS/JS</li><li>Nginx</li><li>Docker</li><li>Traefik</li><li>GitHub Actions</li>
+              </ul>
+              <div class="project-links">
+                <a href="https://devsystem.tech" target="_blank" rel="noreferrer">Acessar projeto <span aria-hidden="true">↗</span></a>
+                <a href="https://github.com/anderson-souza-tech/portfolio" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-board project-featured reveal">
+            <div class="terminal-bar"><span></span><span></span><span></span><small>devsystem / financas</small></div>
+            <div class="project-empty">
+              <div class="prompt" aria-hidden="true"><span>$</span> status --projeto=devsystem-financas</div>
+              <div class="project-status"><span class="status-dot" aria-hidden="true"></span> EM PRODUÇÃO</div>
+              <h3>DevSystem Finanças.</h3>
+              <p>Aplicação financeira desenvolvida em PHP 8.3 e MariaDB para controle de contas fixas e parceladas, favorecidos, filtros por período, dashboard, relatórios e previsões mensais.</p>
+              <div class="project-highlights">
+                <span>CI/CD automatizado</span>
+                <span>Persistência de dados</span>
+                <span>HTTPS com Traefik</span>
+                <span>AI Harness somente leitura</span>
+              </div>
+              <ul class="project-stack" aria-label="Tecnologias do DevSystem Finanças">
+                <li>PHP 8.3</li><li>MariaDB</li><li>Apache</li><li>Docker</li><li>Traefik</li><li>GitHub Actions</li>
+              </ul>
+              <div class="project-architecture" aria-label="Resumo da arquitetura">
+                <code>GitHub → Actions → Registry → VPS → Traefik → PHP/Apache → MariaDB</code>
+              </div>
+              <div class="project-links">
+                <a href="https://github.com/anderson-souza-tech/devsystem-financas" target="_blank" rel="noreferrer">Ver código no GitHub <span aria-hidden="true">↗</span></a>
+              </div>
+            </div>
+          </article>
         </div>
       </section>
 

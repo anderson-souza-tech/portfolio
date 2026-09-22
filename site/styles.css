@@ -83,6 +83,20 @@ h2 { font-size: clamp(2.7rem, 5vw, 5.25rem); line-height: 1; letter-spacing: -.0
 .study-line { height: 2px; position: absolute; bottom: 30px; left: 28px; right: 28px; overflow: hidden; background: repeating-linear-gradient(90deg, #0ebd78 0 20px, #e8ecee 20px 28px); }
 
 .projects .section-heading { margin-bottom: 55px; }
+.project-grid { display: grid; gap: 28px; }
+.project-grid .project-board { max-width: none; width: 100%; margin-left: 0; }
+.project-featured { border-color: rgba(67,242,161,.28); }
+.project-status { display: inline-flex; align-items: center; gap: 10px; margin-top: 22px; color: #8fa2b6; font-size: .72rem; letter-spacing: .12em; font-weight: 700; }
+.project-status .status-dot { width: 7px; height: 7px; }
+.project-stack { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 26px 0 0; }
+.project-stack li { border: 1px solid var(--line); padding: 7px 10px; color: #9eb0c2; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .72rem; }
+.project-highlights { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin-top: 26px; }
+.project-highlights span { padding: 11px 12px; border-left: 2px solid var(--accent); background: rgba(67,242,161,.045); color: #afbfce; font-size: .84rem; }
+.project-architecture { margin-top: 24px; padding: 16px; border: 1px solid var(--line); background: rgba(0,0,0,.16); overflow-x: auto; }
+.project-architecture code { color: var(--accent-2); white-space: nowrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .78rem; }
+.project-links { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 22px; }
+.project-links a { margin-top: 0; }
+
 .project-board { max-width: 920px; margin-left: auto; border: 1px solid var(--line); background: var(--ink-2); box-shadow: 0 30px 80px rgba(0,0,0,.25); }
 .terminal-bar { height: 46px; display: flex; align-items: center; gap: 7px; padding-inline: 16px; border-bottom: 1px solid var(--line); }
 .terminal-bar > span { width: 9px; height: 9px; border-radius: 50%; background: #314054; }
@@ -125,6 +139,7 @@ h2 { font-size: clamp(2.7rem, 5vw, 5.25rem); line-height: 1; letter-spacing: -.0
   .portrait-wrap { justify-self: center; width: min(88%, 470px); }
   .about-grid, .contact-panel { grid-template-columns: 1fr; gap: 35px; }
   .tech-grid { grid-template-columns: 1fr; }
+  .project-highlights { grid-template-columns: 1fr; }
   .contact-links { grid-column: 1; }
 }
 
