@@ -22,6 +22,7 @@
         <a href="#sobre">Sobre</a>
         <a href="#tecnologias">Tecnologias</a>
         <a href="#projetos">Projetos</a>
+        <a href="#assistente">DevSystem AI</a>
         <a class="nav-contact" href="#contato">Contato</a>
       </nav>
     </header>
@@ -146,6 +147,43 @@
               </div>
             </div>
           </article>
+        </div>
+      </section>
+
+      <section id="assistente" class="assistant-section section-shell section-space">
+        <div class="section-heading reveal">
+          <div class="section-label"><span>04</span> DEVSYSTEM AI</div>
+          <h2>Pergunte sobre os projetos.</h2>
+          <p>Um Harness local consulta apenas informações públicas e previamente autorizadas do portfólio. Nenhum acesso ao servidor, banco de dados ou credenciais é realizado.</p>
+        </div>
+
+        <div class="assistant-panel reveal">
+          <div class="assistant-header">
+            <div>
+              <span class="assistant-kicker">HARNESS LOCAL</span>
+              <strong>Assistente DevSystem</strong>
+            </div>
+            <span class="assistant-safe"><span class="status-dot" aria-hidden="true"></span> somente leitura</span>
+          </div>
+
+          <div id="assistant-log" class="assistant-log" aria-live="polite">
+            <div class="assistant-message assistant-message-system">
+              Pergunte, por exemplo: “Quais projetos usam Docker?”, “Como funciona o Finanças?” ou “Qual stack está em produção?”.
+            </div>
+          </div>
+
+          <form id="assistant-form" class="assistant-form">
+            <label class="sr-only" for="assistant-input">Pergunte sobre os projetos DevSystem</label>
+            <input id="assistant-input" type="text" maxlength="180" autocomplete="off" placeholder="Ex.: Como funciona o AI Harness do Finanças?" />
+            <button type="submit">Perguntar <span aria-hidden="true">↗</span></button>
+          </form>
+
+          <div class="assistant-suggestions" aria-label="Perguntas sugeridas">
+            <button type="button" data-question="Quais projetos usam Docker?">Projetos com Docker</button>
+            <button type="button" data-question="Como funciona o DevSystem Finanças?">Sobre o Finanças</button>
+            <button type="button" data-question="Como funciona o CI/CD?">CI/CD</button>
+            <button type="button" data-question="O que é o AI Harness?">AI Harness</button>
+          </div>
         </div>
       </section>
 
