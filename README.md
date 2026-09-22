@@ -8,7 +8,7 @@ Portfólio técnico de Anderson Souza, publicado em uma VPS Ubuntu com Docker, N
 
 ## Sobre o projeto
 
-O DevSystem é um portfólio estático desenvolvido com HTML, CSS e JavaScript. O conteúdo é servido pelo Nginx dentro de um container Docker.
+O DevSystem é um portfólio estático desenvolvido com HTML, CSS e JavaScript. O conteúdo é servido pelo Nginx dentro de um container Docker. A seção de projetos apresenta aplicações reais da DevSystem, incluindo o DevSystem Finanças.
 
 Quando uma alteração é aprovada e enviada para a branch `main`, o GitHub Actions valida o projeto, publica a imagem no GitHub Container Registry e atualiza automaticamente o container na VPS.
 
@@ -208,6 +208,11 @@ curl http://127.0.0.1:8080/health
 docker inspect devsystem-portfolio --format '{{json .State.Health}}'
 ```
 
+## Projetos apresentados
+
+- **DevSystem Portfolio** — portfólio com Docker, Nginx, Traefik e CI/CD.
+- **DevSystem Finanças** — aplicação em PHP 8.3 e MariaDB com contas fixas/parceladas, dashboard, relatórios, persistência, CI/CD e AI Harness em modo somente leitura.
+
 ## Tecnologias demonstradas
 
 - HTML5, CSS3 e JavaScript
@@ -216,6 +221,8 @@ docker inspect devsystem-portfolio --format '{{json .State.Health}}'
 - Traefik e Let's Encrypt
 - GitHub Actions e GitHub Container Registry
 - Linux e SSH
+- PHP 8.3, Apache e MariaDB
+- AI Harness com consultas controladas em modo somente leitura
 - Docker Swarm e Kubernetes em laboratório
 
 ## Autor
