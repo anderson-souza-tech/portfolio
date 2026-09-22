@@ -208,6 +208,12 @@ curl http://127.0.0.1:8080/health
 docker inspect devsystem-portfolio --format '{{json .State.Health}}'
 ```
 
+## DevSystem AI
+
+O portfólio inclui um Harness local em modo somente leitura. Ele usa `site/data/projects.json` como base de conhecimento e responde perguntas sobre projetos, tecnologias, arquitetura, CI/CD e AI Harness sem acesso ao servidor, banco de dados ou credenciais.
+
+Nesta etapa não há dependência de API externa nem custo de inferência. A estrutura permite futura integração com um provedor de IA mantendo o mesmo princípio de acesso controlado.
+
 ## Projetos apresentados
 
 - **DevSystem Portfolio** — portfólio com Docker, Nginx, Traefik e CI/CD.
