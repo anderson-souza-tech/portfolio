@@ -30,7 +30,29 @@ document.querySelectorAll('.reveal').forEach((element) => observer.observe(eleme
 const assistantForm = document.querySelector('#assistant-form');
 const assistantInput = document.querySelector('#assistant-input');
 const assistantLog = document.querySelector('#assistant-log');
-let projectKnowledge = [];
+const fallbackProjectKnowledge = [
+  {
+    id: 'portfolio',
+    name: 'DevSystem Portfolio',
+    status: 'Em produção',
+    summary: 'Portfólio técnico da DevSystem publicado em VPS Ubuntu com deploy automatizado e HTTPS.',
+    stack: ['HTML', 'CSS', 'JavaScript', 'Nginx', 'Docker', 'Docker Compose', 'Traefik', 'GitHub Actions', 'GitHub Container Registry'],
+    architecture: 'Internet → Traefik → container Nginx → arquivos estáticos do portfólio.',
+    cicd: 'Pull requests validam a aplicação. Após merge na main, o GitHub Actions constrói a imagem, publica no registry e atualiza o container na VPS.'
+  },
+  {
+    id: 'financas',
+    name: 'DevSystem Finanças',
+    status: 'Em produção',
+    summary: 'Aplicação financeira para controle de contas fixas e parceladas, favorecidos, filtros por período, dashboard, previsões e relatórios.',
+    stack: ['PHP 8.3', 'Apache', 'MariaDB', 'Docker', 'Docker Compose', 'Traefik', 'GitHub Actions', 'GitHub Container Registry'],
+    architecture: 'Internet → Traefik → PHP/Apache → rede interna Docker → MariaDB persistente.',
+    cicd: 'A pipeline valida PHP e JavaScript, sobe um ambiente descartável com MariaDB, testa health check e banco, publica a imagem e faz deploy por SSH preservando banco e variáveis de ambiente.',
+    harness: 'O AI Harness do DevSystem Finanças opera em modo somente leitura. Ele interpreta perguntas dentro de um contrato fechado, valida dimensões e filtros permitidos e usa consultas preparadas. A IA não recebe acesso para executar SQL livre nem alterar lançamentos.'
+  }
+];
+
+let projectKnowledge = fallbackProjectKnowledge;
 
 const normalizeText = (value = '') =>
   value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
@@ -88,8 +110,9 @@ fetch('data/projects.json')
   .then((data) => {
     projectKnowledge = data.projects || [];
   })
-  .catch(() => {
-    projectKnowledge = [];
+  .catch((error) => {
+    console.warn('DevSystem AI: usando base local de fallback.', error);
+    projectKnowledge = fallbackProjectKnowledge;
   });
 
 assistantForm?.addEventListener('submit', (event) => {
@@ -99,14 +122,18 @@ assistantForm?.addEventListener('submit', (event) => {
 
   addAssistantMessage(question, 'user');
 
-  if (!projectKnowledge.length) {
-    addAssistantMessage('A base local de projetos ainda está carregando. Tente novamente em instantes.', 'bot');
-  } else {
-    addAssistantMessage(answerQuestion(question), 'bot');
+  try {
+    const answer = answerQuestion(question);
+    addAssistantMessage(answer || 'Não encontrei uma resposta para essa pergunta na base pública do portfólio.', 'bot');
+  } catch (error) {
+    console.error('DevSystem AI: erro ao gerar resposta.', error);
+    addAssistantMessage('Ocorreu um erro ao processar a pergunta. Tente novamente ou use uma das sugestões abaixo.', 'bot');
   }
 
-  assistantInput.value = '';
-  assistantInput.focus();
+  if (assistantInput) {
+    assistantInput.value = '';
+    assistantInput.focus();
+  }
 });
 
 document.querySelectorAll('[data-question]').forEach((button) => {
