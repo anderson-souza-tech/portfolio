@@ -218,6 +218,7 @@ Nesta etapa não há dependência de API externa nem custo de inferência. A est
 
 - **DevSystem Portfolio** — portfólio com Docker, Nginx, Traefik e CI/CD.
 - **DevSystem Finanças** — aplicação em PHP 8.3 e MariaDB com contas fixas/parceladas, dashboard, relatórios, persistência, CI/CD e AI Harness em modo somente leitura.
+- **DevSystem Consultas** — aplicação privada PHP 8.3/MariaDB 11.4 para agenda familiar, calendário, histórico e lembretes automáticos D-3 por SMTP, com scheduler e worker separados. O site apresenta somente informações técnicas públicas, sem acesso à aplicação ou ao repositório privado.
 
 ## Tecnologias demonstradas
 

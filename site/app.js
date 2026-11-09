@@ -49,6 +49,16 @@ const fallbackProjectKnowledge = [
     architecture: 'Internet → Traefik → PHP/Apache → rede interna Docker → MariaDB persistente.',
     cicd: 'A pipeline valida PHP e JavaScript, sobe um ambiente descartável com MariaDB, testa health check e banco, publica a imagem e faz deploy por SSH preservando banco e variáveis de ambiente.',
     harness: 'O AI Harness do DevSystem Finanças opera em modo somente leitura. Ele interpreta perguntas dentro de um contrato fechado, valida dimensões e filtros permitidos e usa consultas preparadas. A IA não recebe acesso para executar SQL livre nem alterar lançamentos.'
+  },
+  {
+    id: 'consultas',
+    name: 'DevSystem Consultas',
+    status: 'Em produção',
+    summary: 'Sistema privado de agenda familiar com consultas, exames, calendário, histórico e lembretes por e-mail três dias antes dos compromissos.',
+    stack: ['PHP 8.3', 'Apache', 'MariaDB 11.4', 'Docker', 'Docker Compose', 'Traefik', 'PHPMailer'],
+    architecture: 'Internet → Traefik → PHP/Apache → MariaDB. Scheduler D-3 prepara lembretes; worker separado entrega e-mails por SMTP.',
+    cicd: 'Código versionado em repositório privado; implantação em produção efetuada de forma controlada após testes, backup e validação. Não há confirmação de deploy automático desse projeto.',
+    privacy: 'A aplicação e o repositório são privados; o portfólio não compartilha agendamentos, dados de pacientes ou credenciais.'
   }
 ];
 
@@ -70,6 +80,7 @@ const answerQuestion = (question) => {
   const q = normalizeText(question);
   const portfolio = projectKnowledge.find((project) => project.id === 'portfolio');
   const financas = projectKnowledge.find((project) => project.id === 'financas');
+  const consultas = projectKnowledge.find((project) => project.id === 'consultas');
 
   if (/harness|inteligencia artificial|\bia\b/.test(q)) {
     return financas?.harness || 'O AI Harness trabalha com informações autorizadas e operações previamente definidas.';
@@ -77,6 +88,10 @@ const answerQuestion = (question) => {
 
   if (/ci.?cd|pipeline|deploy|github actions/.test(q)) {
     return projectKnowledge.map((project) => `${project.name}: ${project.cicd}`).join('\n\n');
+  }
+
+  if (/consultas|consulta|exame|agenda familiar|lembrete/.test(q)) {
+    return consultas ? `${consultas.name}\n${consultas.summary}\n\nStack: ${consultas.stack.join(', ')}.\n\nArquitetura: ${consultas.architecture}\n\nPrivacidade: ${consultas.privacy}` : '';
   }
 
   if (/financas|financeiro|mariadb|php/.test(q)) {
