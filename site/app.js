@@ -49,6 +49,15 @@ const fallbackProjectKnowledge = [
     architecture: 'Internet → Traefik → PHP/Apache → rede interna Docker → MariaDB persistente.',
     cicd: 'A pipeline valida PHP e JavaScript, sobe um ambiente descartável com MariaDB, testa health check e banco, publica a imagem e faz deploy por SSH preservando banco e variáveis de ambiente.',
     harness: 'O AI Harness do DevSystem Finanças opera em modo somente leitura. Ele interpreta perguntas dentro de um contrato fechado, valida dimensões e filtros permitidos e usa consultas preparadas. A IA não recebe acesso para executar SQL livre nem alterar lançamentos.'
+  },
+  {
+    id: 'consultas',
+    name: 'Agenda Médica Familiar',
+    status: 'Aplicação familiar de acesso restrito',
+    summary: 'Agenda familiar com calendário, histórico, controle de acesso e lembretes D-3 por e-mail com consentimento. Nenhum dado clínico aparece no portfólio.',
+    stack: ['PHP 8.3', 'Apache', 'MariaDB', 'Docker', 'Traefik', 'PHPMailer'],
+    architecture: 'HTTPS - Traefik - PHP/Apache - MariaDB. Scheduler D-3 cria fila, worker separado processa e-mails autorizados.',
+    cicd: 'Implantação controlada, com testes, documentação e homologação. Não há alegação de deploy automático da Agenda.'
   }
 ];
 
@@ -70,6 +79,7 @@ const answerQuestion = (question) => {
   const q = normalizeText(question);
   const portfolio = projectKnowledge.find((project) => project.id === 'portfolio');
   const financas = projectKnowledge.find((project) => project.id === 'financas');
+  const consultas = projectKnowledge.find((project) => project.id === 'consultas');
 
   if (/harness|inteligencia artificial|\bia\b/.test(q)) {
     return financas?.harness || 'O AI Harness trabalha com informações autorizadas e operações previamente definidas.';
@@ -77,6 +87,10 @@ const answerQuestion = (question) => {
 
   if (/ci.?cd|pipeline|deploy|github actions/.test(q)) {
     return projectKnowledge.map((project) => `${project.name}: ${project.cicd}`).join('\n\n');
+  }
+
+  if (/agenda|consultas|familiar|medica|medico|lembrete/.test(q)) {
+    return consultas ? `${consultas.name}\n${consultas.summary}\n\nStack: ${consultas.stack.join(', ')}.\n\nArquitetura: ${consultas.architecture}` : 'Projeto com acesso restrito; os detalhes médicos são privados.';
   }
 
   if (/financas|financeiro|mariadb|php/.test(q)) {
