@@ -152,6 +152,28 @@
               </div>
             </div>
           </article>
+          <article class="project-board reveal">
+            <div class="terminal-bar"><span></span><span></span><span></span><small>devsystem / consultas</small></div>
+            <div class="project-empty">
+              <div class="prompt" aria-hidden="true"><span>$</span> status --projeto=devsystem-consultas</div>
+              <div class="project-status"><span class="status-dot" aria-hidden="true"></span> EM PRODUÇÃO</div>
+              <h3>DevSystem Consultas.</h3>
+              <p>Aplicação familiar de gestão de consultas e exames com calendário, histórico, autenticação e lembretes automáticos por e-mail três dias antes dos compromissos.</p>
+              <div class="project-highlights">
+                <span>Controle de acesso</span>
+                <span>Lembretes D-3 por SMTP</span>
+                <span>Backups testados</span>
+                <span>Dados privados protegidos</span>
+              </div>
+              <ul class="project-stack" aria-label="Tecnologias do DevSystem Consultas">
+                <li>PHP 8.3</li><li>MariaDB 11.4</li><li>Apache</li><li>Docker Compose</li><li>Traefik</li><li>PHPMailer</li>
+              </ul>
+              <div class="project-architecture" aria-label="Resumo da arquitetura">
+                <code>Traefik → PHP/Apache → MariaDB · Scheduler D-3 → Worker SMTP</code>
+              </div>
+              <p class="project-privacy">Estudo de caso público. Sistema e repositório de dados familiares com acesso restrito.</p>
+            </div>
+          </article>
         </div>
       </section>
 
@@ -173,7 +195,7 @@
 
           <div id="assistant-log" class="assistant-log" aria-live="polite">
             <div class="assistant-message assistant-message-system">
-              Pergunte, por exemplo: “Quais projetos usam Docker?”, “Como funciona o Finanças?” ou “Qual stack está em produção?”.
+              Pergunte, por exemplo: “Quais projetos usam Docker?”, “Como funciona o Finanças?”, “Como funciona o Consultas?” ou “Qual stack está em produção?”.
             </div>
           </div>
 
@@ -186,6 +208,7 @@
           <div class="assistant-suggestions" aria-label="Perguntas sugeridas">
             <button type="button" data-question="Quais projetos usam Docker?">Projetos com Docker</button>
             <button type="button" data-question="Como funciona o DevSystem Finanças?">Sobre o Finanças</button>
+            <button type="button" data-question="Como funciona o DevSystem Consultas?">Sobre o Consultas</button>
             <button type="button" data-question="Como funciona o CI/CD?">CI/CD</button>
             <button type="button" data-question="O que é o AI Harness?">AI Harness</button>
           </div>
