@@ -218,6 +218,15 @@ Nesta etapa não há dependência de API externa nem custo de inferência. A est
 
 - **DevSystem Portfolio** — portfólio com Docker, Nginx, Traefik e CI/CD.
 - **DevSystem Finanças** — aplicação em PHP 8.3 e MariaDB com contas fixas/parceladas, dashboard, relatórios, persistência, CI/CD e AI Harness em modo somente leitura.
+- **Agenda Médica Familiar** - aplicação PHP/Apache/MariaDB com calendário, histórico, controle de acesso e lembretes D-3 por e-mail. Case público sem dados médicos, nomes de familiares, links para o sistema ou repositório privado.
+
+## Metodologia Design First
+
+Adotamos o fluxo: ideia - projeto lógico - protótipo - aprovação - desenvolvimento - testes - implantação - documentação.
+
+Os fluxos e protótipos são produzidos com Figma, decisões e procedimentos documentados no Notion, e o código versionado no GitHub. A publicação de cases técnicos não inclui credenciais, detalhes pessoais ou dados médicos de aplicações privadas.
+
+A seção pública de projetos usa informações não sensíveis em `site/index.html` e `site/data/projects.json`. A base do assistente também possui fallback em `site/app.js`; manter as duas fontes sincronizadas ao incluir ou atualizar projetos.
 
 ## Tecnologias demonstradas
 
