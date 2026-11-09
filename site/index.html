@@ -22,6 +22,7 @@
         <a href="#sobre">Sobre</a>
         <a href="#tecnologias">Tecnologias</a>
         <a href="#projetos">Projetos</a>
+        <a href="#metodologia">Método</a>
         <a href="#assistente">DevSystem AI</a>
         <a class="nav-contact" href="#contato">Contato</a>
       </nav>
@@ -107,7 +108,7 @@
       <section id="projetos" class="projects section-shell section-space">
         <div class="section-heading reveal">
           <div class="section-label"><span>03</span> PROJETOS</div>
-          <h2>Projetos em produção</h2>
+          <h2>Projetos e soluções reais</h2>
           <p>Projetos desenvolvidos para transformar estudos de infraestrutura, containers e automação em soluções práticas.</p>
         </div>
         <div class="project-grid">
@@ -152,12 +153,55 @@
               </div>
             </div>
           </article>
+          <article class="project-board project-consultas reveal">
+            <div class="terminal-bar"><span></span><span></span><span></span><small>devsystem / consultas</small></div>
+            <div class="project-empty">
+              <div class="prompt" aria-hidden="true"><span>$</span> status --projeto=agenda-familiar</div>
+              <div class="project-status"><span class="status-dot" aria-hidden="true"></span> PROJETO REAL</div>
+              <h3>Agenda Médica Familiar.</h3>
+              <p>Aplicação para organização compartilhada de consultas e exames, com autenticação, permissões familiares, calendário, histórico e lembretes D-3 por e-mail baseados em consentimento.</p>
+              <div class="project-highlights">
+                <span>Controle de acesso e CSRF</span>
+                <span>Lembretes com fila e worker</span>
+                <span>Design First e documentação</span>
+                <span>Dados pessoais preservados</span>
+              </div>
+              <ul class="project-stack" aria-label="Tecnologias da Agenda Médica Familiar">
+                <li>PHP 8.3</li><li>Apache</li><li>MariaDB</li><li>Docker</li><li>Traefik</li><li>PHPMailer</li>
+              </ul>
+              <div class="project-architecture" aria-label="Resumo da arquitetura da Agenda Médica Familiar">
+                <code>HTTPS - PHP/Apache - MariaDB - scheduler D-3 - fila - worker SMTP</code>
+              </div>
+              <p class="project-privacy">Case técnico apresentado sem links para a agenda privada, repositório restrito ou informações médicas.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="metodologia" class="method-section section-space">
+        <div class="section-shell">
+          <div class="section-heading reveal">
+            <div class="section-label"><span>04</span> METODOLOGIA</div>
+            <h2>Design First. Engenharia com evidências.</h2>
+            <p>Planejamos e validamos a arquitetura e as interfaces antes de implementar, preservando segurança, manutenção e rastreabilidade.</p>
+          </div>
+          <ol class="method-steps reveal">
+            <li><strong>Ideia</strong><span>Objetivo e requisitos</span></li>
+            <li><strong>Projeto lógico</strong><span>Arquitetura e fluxos</span></li>
+            <li><strong>Protótipo</strong><span>Interface e experiência</span></li>
+            <li><strong>Aprovação</strong><span>Escopo e riscos</span></li>
+            <li><strong>Desenvolvimento</strong><span>Implementação controlada</span></li>
+            <li><strong>Testes</strong><span>Validação técnica</span></li>
+            <li><strong>Implantação</strong><span>Deploy e rollback</span></li>
+            <li><strong>Documentação</strong><span>Conhecimento reutilizável</span></li>
+          </ol>
+          <p class="method-note reveal">Figma para os protótipos, Notion para a documentação e GitHub para versionamento. Os exemplos públicos são apresentados sem dados de familiares, pacientes ou credenciais.</p>
         </div>
       </section>
 
       <section id="assistente" class="assistant-section section-shell section-space">
         <div class="section-heading reveal">
-          <div class="section-label"><span>04</span> DEVSYSTEM AI</div>
+          <div class="section-label"><span>05</span> DEVSYSTEM AI</div>
           <h2>Pergunte sobre os projetos.</h2>
           <p>Um Harness local consulta apenas informações públicas e previamente autorizadas do portfólio. Nenhum acesso ao servidor, banco de dados ou credenciais é realizado.</p>
         </div>
@@ -186,6 +230,7 @@
           <div class="assistant-suggestions" aria-label="Perguntas sugeridas">
             <button type="button" data-question="Quais projetos usam Docker?">Projetos com Docker</button>
             <button type="button" data-question="Como funciona o DevSystem Finanças?">Sobre o Finanças</button>
+            <button type="button" data-question="O que é a Agenda Médica Familiar?">Agenda Familiar</button>
             <button type="button" data-question="Como funciona o CI/CD?">CI/CD</button>
             <button type="button" data-question="O que é o AI Harness?">AI Harness</button>
           </div>
