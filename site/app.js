@@ -91,7 +91,7 @@ const answerQuestion = (question) => {
   }
 
   if (/consultas|consulta|exame|agenda familiar|lembrete/.test(q)) {
-    return consultas ? `${consultas.name}\\n${consultas.summary}\\n\\nStack: ${consultas.stack.join(', ')}.\\n\\nArquitetura: ${consultas.architecture}\\n\\nPrivacidade: ${consultas.privacy}` : '';
+    return consultas ? `${consultas.name}\n${consultas.summary}\n\nStack: ${consultas.stack.join(', ')}.\n\nArquitetura: ${consultas.architecture}\n\nPrivacidade: ${consultas.privacy}` : '';
   }
 
   if (/financas|financeiro|mariadb|php/.test(q)) {
