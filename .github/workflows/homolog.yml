@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - homolog/infraestrutura
+    paths-ignore:
+      - "docs/**"
   workflow_dispatch:
 
 permissions:
