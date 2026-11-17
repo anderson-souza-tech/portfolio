@@ -1,0 +1,75 @@
+name: DevSystem Portfolio - Homologacao
+
+on:
+  push:
+    branches:
+      - homolog/infraestrutura
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: portfolio-homolog
+  cancel-in-progress: false
+
+jobs:
+  build-test-publish:
+    name: Build, teste e publicacao
+    if: github.ref == 'refs/heads/homolog/infraestrutura'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Baixar codigo
+        uses: actions/checkout@v4
+
+      - name: Validar arquivos obrigatorios
+        run: |
+          test -s Dockerfile
+          test -s site/index.html
+          test -s site/styles.css
+          test -s site/app.js
+          test -s nginx/default.conf
+
+      - name: Construir imagem de teste
+        run: docker build -t portfolio-homolog:test .
+
+      - name: Testar container
+        run: |
+          docker run -d --name portfolio-homolog-test portfolio-homolog:test
+
+          for _ in 1 2 3 4 5; do
+            if docker exec portfolio-homolog-test wget -q --spider http://127.0.0.1/health; then
+              exit 0
+            fi
+            sleep 2
+          done
+
+          docker logs portfolio-homolog-test
+          exit 1
+
+      - name: Remover container de teste
+        if: always()
+        run: docker rm -f portfolio-homolog-test 2>/dev/null || true
+
+      - name: Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Autenticar no GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publicar imagem versionada
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/anderson-souza-tech/devsystem-portfolio:homolog-${{ github.sha }}
+          labels: |
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}

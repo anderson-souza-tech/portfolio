@@ -1,0 +1,26 @@
+name: devsystem-portfolio-homolog
+
+services:
+  web:
+    image: ${PORTFOLIO_IMAGE:-ghcr.io/anderson-souza-tech/devsystem-portfolio:6e4eaf3ca3fbaaeccf73be150711f787ea13ee25}
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:8088:80"
+
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+    security_opt:
+      - no-new-privileges:true
+
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge

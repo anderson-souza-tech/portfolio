@@ -10,3 +10,6 @@ docker-stack.yml
 docker-compose.yml
 .github
 deploy
+
+# Configuracao exclusiva de homologacao
+compose.homolog.yml
